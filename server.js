@@ -22,79 +22,35 @@ var server = http.createServer(function (request, response) {
     // request.headers可以获得所有的请求头。请求体不好读
     console.log('勤奋的孩子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
 
-    if (path === '/index.html') {
-        response.statusCode = 200
-        // 用来设置返回字符集，不然可能乱码
-        response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        const string = fs.readFileSync('public/index.html')
-        response.write(string)
-        response.end()
+
+    response.statusCode = 200
+    let type = {
+        ".html": "text/html",
+        ".css": "text/css",
+        ".xml": "text/xml",
+        ".js": "text/javascript",
+        ".json": "text/json",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
     }
-    else if (path === '/index.css') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/css;charset=utf-8')
-        response.write(fs.readFileSync('public/index.css'))
-        response.end()
-    }
-    else if (path === '/index.js') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-        response.write(fs.readFileSync('public/index.js'))
-        response.end()
-    }
-    else if (path === '/main.js') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-        response.write(fs.readFileSync('public/main.js'))
-        response.end()
-    }
-    else if (path === '/ajax.html') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        response.write(fs.readFileSync('public/ajax.html'))
-        response.end()
-    }
-    else if (path === '/index.xml') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/xml;charset=utf-8')
-        const string = fs.readFileSync('public/index.xml')
-        response.write(string)
-        response.end()
-    }
-    else if (path === '/x.json') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/json;charset=utf-8')
-        const string = fs.readFileSync('public/x.json')
-        response.write(string)
-        response.end()
-    }
-    else if (path === `/1.json`) {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/json;charset=utf-8')
-        const string = fs.readFileSync(`data/1.json`)
-        response.write(string)
-        response.end()
-    }
-    else if (path === `/2.json`) {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/json;charset=utf-8')
-        const string = fs.readFileSync(`data/2.json`)
-        response.write(string)
-        response.end()
-    }
-    else if (path === `/3.json`) {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/json;charset=utf-8')
-        const string = fs.readFileSync(`data/3.json`)
-        response.write(string)
-        response.end()
-    }
-    else {
+    // 用来设置返回字符集，不然可能乱码
+    path = (path === "/" ? "/index.html" : path)
+    let index = path.indexOf(".")
+    let suffix = path.substring(index)
+    response.setHeader('Content-Type', `${type[suffix] || "text/html"};charset=utf-8`)
+    let content
+    try {
+        content = fs.readFileSync(`public/${path}`)
+
+    } catch (error) {
         response.statusCode = 404
-        response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        response.write(`404你访问的页面不存在TOT`)
-        response.end()
+        content = response.statusCode + " + 文件不存在鸭~"
+
     }
+    response.write(content)
+    response.end()
+
 
     /******** 代码结束，下面不要看 ************/
 

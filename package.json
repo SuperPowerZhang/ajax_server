@@ -2,6 +2,7 @@
   "name": "ajax",
   "version": "1.0.0",
   "main": "server.js",
+  "repository": "git@github.com:SuperPowerZhang/ajax_server.git",
   "author": "SuperPowerZhang <2285546178@qq.com>",
   "license": "MIT"
 }
